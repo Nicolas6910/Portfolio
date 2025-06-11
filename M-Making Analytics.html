@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport d'Analyse - Wash Trading Detection</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+
+    <!-- Plotly -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+            --dark-bg: #1a1a1a;
+            --light-bg: #ecf0f1;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .navbar {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        .card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,.15);
+        }
+        .metric-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .positive {
+            color: var(--success-color);
+        }
+        .negative {
+            color: var(--danger-color);
+        }
+        .warning {
+            color: var(--warning-color);
+        }
+        .section-title {
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+        .summary-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--info-color);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .alert-box {
+            background-color: #fff3cd;
+            border-left: 4px solid var(--warning-color);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .danger-box {
+            background-color: #f8d7da;
+            border-left: 4px solid var(--danger-color);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        .address-row-high {
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+        .address-row-medium {
+            background-color: rgba(243, 156, 18, 0.1);
+        }
+        .address-row-low {
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        .pattern-badge {
+            display: inline-block;
+            padding: 0.25em 0.4em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+            margin: 2px;
+        }
+        .badge-cycles {
+            background-color: #dc3545;
+            color: white;
+        }
+        .badge-bidirectional {
+            background-color: #fd7e14;
+            color: white;
+        }
+        .badge-ratio {
+            background-color: #6f42c1;
+            color: white;
+        }
+        .table-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .dark-mode {
+            background-color: var(--dark-bg);
+            color: #f8f9fa;
+        }
+        .dark-mode .card {
+            background-color: #2c2c2c;
+            color: #f8f9fa;
+        }
+        .dark-mode .table {
+            color: #f8f9fa;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt"></i> Analyse Wash Trading
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#resume">Résumé</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#kpis">KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#programmes">Programmes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#adresses">Adresses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#patterns">Patterns</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#recommandations">Recommandations</a></li>
+                </ul>
+                <div class="ms-auto">
+                    <button class="btn btn-outline-light no-print" onclick="window.print()">
+                        <i class="fas fa-print"></i> Imprimer
+                    </button>
+                    <button class="btn btn-outline-light no-print" onclick="exportToCSV()">
+                        <i class="fas fa-download"></i> Export CSV
+                    </button>
+                    <button class="btn btn-outline-light no-print" onclick="toggleDarkMode()">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title">Analyse de Détection de Wash Trading</h1>
+                        <div class="row">
+                            <div class="col-md-3"><p><strong>Programmes analysés :</strong> 10</p></div>
+                            <div class="col-md-3"><p><strong>Période :</strong> 2024-11-20 – 2025-03-12</p></div>
+                            <div class="col-md-3"><p><strong>Types :</strong> PERPS-ALT / PERPS-MAJ</p></div>
+                            <div class="col-md-3"><p><strong>Version :</strong> MM Analysis 1.0</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Résumé exécutif -->
+        <section id="resume">
+            <h2 class="section-title">Résumé Exécutif</h2>
+            <div class="row">
+                <div class="col-12">
+                    <div class="danger-box">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Détection de Patterns Suspects</h4>
+                        <p>L'analyse a identifié <strong>236 patterns suspects</strong> de wash trading 
+                        sur 10 programmes analysés, représentant un volume total de 
+                        <strong>$667,648,681.46</strong>.</p>
+                        <p>Le programme <strong>PERPS-MAJ</strong> présente la plus forte concentration 
+                        de patterns suspects avec des volumes particulièrement élevés sur certaines périodes.</p>
+                    </div>
+                    
+                    <div class="alert-box">
+                        <h5>Principaux Indicateurs d'Alerte :</h5>
+                        <ul>
+                            <li><strong>181 cycles courts</strong> détectés (76.7% des patterns)</li>
+                            <li><strong>54 échanges bidirectionnels</strong> sous 1 heure</li>
+                            <li><strong>5 adresses récurrentes</strong> dans plusieurs programmes</li>
+                            <li>Volume moyen par pattern : <strong>$2.8M</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="summary-box">
+                        <h5>Recommandations Prioritaires :</h5>
+                        <ul>
+                            <li>Investigation manuelle immédiate des adresses top 3</li>
+                            <li>Révision des critères d'éligibilité market-maker</li>
+                            <li>Mise en place de monitoring en temps réel</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- KPIs -->
+        <section id="kpis" class="mt-5">
+            <h2 class="section-title">Indicateurs de Détection</h2>
+            <div class="row">
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="metric-card">
+                        <div class="metric-label">Total Patterns Suspects</div>
+                        <div class="metric-value negative">236</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="metric-card">
+                        <div class="metric-label">Volume Total Suspect</div>
+                        <div class="metric-value negative">$667.6M</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="metric-card">
+                        <div class="metric-label">Adresses Uniques</div>
+                        <div class="metric-value warning">15</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="metric-card">
+                        <div class="metric-label">Taux de Suspicion</div>
+                        <div class="metric-value negative">High</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-4 col-sm-6 mb-3">
+                    <div class="metric-card">
+                        <div class="metric-label">Cycles Courts</div>
+                        <div class="metric-value">181</div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-3">
+                    <div class="metric-card">
+                        <div class="metric-label">Bidirectionnels <1h</div>
+                        <div class="metric-value">54</div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-3">
+                    <div class="metric-card">
+                        <div class="metric-label">Ratios Élevés</div>
+                        <div class="metric-value">1</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Répartition des Patterns par Type</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td>Cycles courts</td>
+                                            <td><strong>181</strong> (76.7%)</td>
+                                            <td>Volume moyen</td>
+                                            <td><strong>$2.95M</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bidirectionnels</td>
+                                            <td><strong>54</strong> (22.9%)</td>
+                                            <td>Volume moyen</td>
+                                            <td><strong>$2.31M</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ratios élevés</td>
+                                            <td><strong>1</strong> (0.4%)</td>
+                                            <td>Seuil détection</td>
+                                            <td><strong>>0.5</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Graphiques -->
+        <section id="graphiques" class="mt-5">
+            <h2 class="section-title">Analyses Visuelles</h2>
+
+            <div class="chart-container">
+                <h4>Évolution des Patterns par Programme</h4>
+                <div id="patternsEvolution"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h4>Répartition des Types de Patterns</h4>
+                        <div id="patternsDistribution"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h4>Volume par Programme</h4>
+                        <div id="volumeByProgram"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h4>Top 10 Adresses par Volume Suspect</h4>
+                <div id="topAddresses"></div>
+            </div>
+        </section>
+
+        <!-- Programmes analysés -->
+        <section id="programmes" class="mt-5">
+            <h2 class="section-title">Analyse par Programme</h2>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5>Programmes les Plus Problématiques</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Programme</th>
+                                    <th>Epoch</th>
+                                    <th>Patterns</th>
+                                    <th>Volume Suspect</th>
+                                    <th>Niveau Risque</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="address-row-high">
+                                    <td><strong>PERPS-MAJ</strong></td>
+                                    <td>2024-12-18</td>
+                                    <td><span class="badge bg-danger">47</span></td>
+                                    <td>$35,484,305.56</td>
+                                    <td><span class="badge bg-danger">TRÈS ÉLEVÉ</span></td>
+                                </tr>
+                                <tr class="address-row-high">
+                                    <td><strong>PERPS-MAJ</strong></td>
+                                    <td>2025-01-15</td>
+                                    <td><span class="badge bg-danger">42</span></td>
+                                    <td>$41,137,613.74</td>
+                                    <td><span class="badge bg-danger">TRÈS ÉLEVÉ</span></td>
+                                </tr>
+                                <tr class="address-row-high">
+                                    <td><strong>PERPS-MAJ</strong></td>
+                                    <td>2025-02-12</td>
+                                    <td><span class="badge bg-danger">39</span></td>
+                                    <td>$31,947,330.20</td>
+                                    <td><span class="badge bg-danger">TRÈS ÉLEVÉ</span></td>
+                                </tr>
+                                <tr class="address-row-medium">
+                                    <td><strong>PERPS-ALT</strong></td>
+                                    <td>2025-01-15</td>
+                                    <td><span class="badge bg-warning">34</span></td>
+                                    <td>$247,307,696.47</td>
+                                    <td><span class="badge bg-warning">ÉLEVÉ</span></td>
+                                </tr>
+                                <tr class="address-row-medium">
+                                    <td><strong>PERPS-ALT</strong></td>
+                                    <td>2025-02-12</td>
+                                    <td><span class="badge bg-warning">32</span></td>
+                                    <td>$108,351,051.92</td>
+                                    <td><span class="badge bg-warning">ÉLEVÉ</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Adresses suspectes -->
+        <section id="adresses" class="mt-5">
+            <h2 class="section-title">Top Adresses Suspectes</h2>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="addressesTable" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Rang</th>
+                                    <th>Adresse</th>
+                                    <th>Patterns Total</th>
+                                    <th>Volume Total</th>
+                                    <th>Programmes</th>
+                                    <th>Types de Patterns</th>
+                                    <th>Niveau Risque</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Adresses Récurrentes</h5>
+                            <p class="text-muted">Adresses présentes dans plusieurs programmes</p>
+                            <ul>
+                                <li><code>0x978e3eb7997a9575cdE1799176829073d2876Fb9</code> - 6 programmes</li>
+                                <li><code>0x8358D0e1468dD370CdaddAc1Ec1F1b85DfB675bc</code> - 6 programmes</li>
+                                <li><code>0x4c7E2cbb3938aB31701416EdCDAefB14b10fBa47</code> - 6 programmes</li>
+                                <li><code>0x6B0fE721937ed61c6e261b5053D6178eCEf059a4</code> - 4 programmes</li>
+                                <li><code>0x2a7D03C5891cB08ddAd1E811131EEf8401099d22</code> - 4 programmes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Patterns par Type</h5>
+                            <p class="text-muted">Répartition des comportements suspects</p>
+                            <div class="d-flex flex-wrap">
+                                <span class="pattern-badge badge-cycles">Cycles: 181</span>
+                                <span class="pattern-badge badge-bidirectional">Bidirectionnels: 54</span>
+                                <span class="pattern-badge badge-ratio">Ratios élevés: 1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Patterns détaillés -->
+        <section id="patterns" class="mt-5">
+            <h2 class="section-title">Analyse des Patterns</h2>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h3 class="text-danger">181</h3>
+                            <h5>Cycles Courts</h5>
+                            <p class="text-muted">Transactions circulaires rapides entre adresses</p>
+                            <span class="badge bg-danger">Risque Très Élevé</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h3 class="text-warning">54</h3>
+                            <h5>Bidirectionnels <1h</h5>
+                            <p class="text-muted">Échanges aller-retour en moins d'une heure</p>
+                            <span class="badge bg-warning">Risque Élevé</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h3 class="text-info">1</h3>
+                            <h5>Ratios Élevés</h5>
+                            <p class="text-muted">Ratio de trading suspect >0.5</p>
+                            <span class="badge bg-info">Risque Modéré</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5>Exemples de Cycles Suspects</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Programme</th>
+                                    <th>Chemin</th>
+                                    <th>Volume</th>
+                                    <th>Trades</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PERPS-ALT</td>
+                                    <td><code>0x6B0f...59a4 → 0x8358...5bc → 0x978e...Fb9 → 0x6B0f...59a4</code></td>
+                                    <td>$33,847,094</td>
+                                    <td>12,649</td>
+                                </tr>
+                                <tr>
+                                    <td>PERPS-ALT</td>
+                                    <td><code>0x4c7E...a47 → 0x8358...5bc → 0x978e...Fb9 → 0x4c7E...a47</code></td>
+                                    <td>$32,462,820</td>
+                                    <td>12,373</td>
+                                </tr>
+                                <tr>
+                                    <td>PERPS-ALT</td>
+                                    <td><code>0x8358...5bc → 0x978e...Fb9 → 0x8358...5bc</code></td>
+                                    <td>$32,219,800</td>
+                                    <td>12,285</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommandations -->
+        <section id="recommandations" class="mt-5">
+            <h2 class="section-title">Recommandations et Actions</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-danger"><i class="fas fa-exclamation-triangle"></i> Actions Immédiates</h5>
+                            <ol>
+                                <li><strong>Investigation manuelle</strong> des 3 adresses top volume</li>
+                                <li><strong>Suspension temporaire</strong> des adresses avec >100 patterns</li>
+                                <li><strong>Audit approfondi</strong> du programme PERPS-MAJ</li>
+                                <li><strong>Révision des critères</strong> d'éligibilité market-maker</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-warning"><i class="fas fa-cog"></i> Améliorations Système</h5>
+                            <ol>
+                                <li><strong>Monitoring temps réel</strong> des cycles courts</li>
+                                <li><strong>Seuils dynamiques</strong> sur ratios bidirectionnels</li>
+                                <li><strong>Machine Learning</strong> pour détection avancée</li>
+                                <li><strong>Dashboard</strong> de surveillance continue</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5><i class="fas fa-lightbulb"></i> Plan d'Action Détaillé</h5>
+                    
+                    <div class="accordion" id="actionPlan">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#phase1">
+                                    Phase 1: Investigation Immédiate (0-7 jours)
+                                </button>
+                            </h2>
+                            <div id="phase1" class="accordion-collapse collapse show">
+                                <div class="accordion-body">
+                                    <ul>
+                                        <li>Analyser manuellement les top 5 adresses suspectes</li>
+                                        <li>Examiner les logs détaillés des programmes PERPS-MAJ</li>
+                                        <li>Identifier les corrélations temporelles entre patterns</li>
+                                        <li>Collecter les preuves pour actions légales si nécessaire</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#phase2">
+                                    Phase 2: Mise en Place de Contrôles (7-30 jours)
+                                </button>
+                            </h2>
+                            <div id="phase2" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <ul>
+                                        <li>Implémenter des alertes temps réel</li>
+                                        <li>Réviser les paramètres de détection</li>
+                                        <li>Renforcer les critères d'onboarding</li>
+                                        <li>Former les équipes sur les nouveaux outils</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#phase3">
+                                    Phase 3: Optimisation Continue (30+ jours)
+                                </button>
+                            </h2>
+                            <div id="phase3" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <ul>
+                                        <li>Développer des modèles ML avancés</li>
+                                        <li>Automatiser les réponses aux patterns détectés</li>
+                                        <li>Établir des KPIs de surveillance</li>
+                                        <li>Effectuer des audits périodiques</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning mt-4">
+                <h5><i class="fas fa-info-circle"></i> Avertissement Important</h5>
+                <p>Ces heuristiques identifient des <strong>anomalies statistiques</strong>, pas des preuves juridiques. 
+                Une investigation manuelle approfondie est indispensable avant toute action disciplinaire.</p>
+                <p>Les faux positifs sont possibles, particulièrement pour les market-makers légitimes 
+                avec des stratégies d'arbitrage rapide.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        // Données pour les graphiques
+        const programsData = [
+            {program: 'PERPS-ALT 2024-11-20', patterns: 16, volume: 133.5},
+            {program: 'PERPS-ALT 2024-12-18', patterns: 14, volume: 136.0},
+            {program: 'PERPS-ALT 2025-01-15', patterns: 34, volume: 818.3},
+            {program: 'PERPS-ALT 2025-02-12', patterns: 32, volume: 282.1},
+            {program: 'PERPS-ALT 2025-03-12', patterns: 9, volume: 11.2},
+            {program: 'PERPS-MAJ 2024-11-20', patterns: 24, volume: 22.8},
+            {program: 'PERPS-MAJ 2024-12-18', patterns: 47, volume: 93.9},
+            {program: 'PERPS-MAJ 2025-01-15', patterns: 42, volume: 99.1},
+            {program: 'PERPS-MAJ 2025-02-12', patterns: 39, volume: 72.6},
+            {program: 'PERPS-MAJ 2025-03-12', patterns: 11, volume: 0.5}
+        ];
+
+        const addressesData = [
+            {
+                rank: 1,
+                address: '0x978e3eb7997a9575cdE1799176829073d2876Fb9',
+                patterns: 145,
+                volume: 541.2,
+                programs: 6,
+                risk: 'TRÈS ÉLEVÉ'
+            },
+            {
+                rank: 2,
+                address: '0x8358D0e1468dD370CdaddAc1Ec1F1b85DfB675bc',
+                patterns: 127,
+                volume: 478.9,
+                programs: 6,
+                risk: 'TRÈS ÉLEVÉ'
+            },
+            {
+                rank: 3,
+                address: '0x4c7E2cbb3938aB31701416EdCDAefB14b10fBa47',
+                patterns: 89,
+                volume: 234.7,
+                programs: 6,
+                risk: 'ÉLEVÉ'
+            },
+            {
+                rank: 4,
+                address: '0x6B0fE721937ed61c6e261b5053D6178eCEf059a4',
+                patterns: 45,
+                volume: 178.3,
+                programs: 4,
+                risk: 'ÉLEVÉ'
+            },
+            {
+                rank: 5,
+                address: '0x2a7D03C5891cB08ddAd1E811131EEf8401099d22',
+                patterns: 52,
+                volume: 156.4,
+                programs: 4,
+                risk: 'ÉLEVÉ'
+            }
+        ];
+
+        const config = {
+            responsive: true,
+            displayModeBar: true,
+            displaylogo: false,
+            modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d']
+        };
+
+        // Évolution des patterns par programme
+        const patternsTrace = {
+            x: programsData.map(d => d.program),
+            y: programsData.map(d => d.patterns),
+            type: 'bar',
+            name: 'Patterns Suspects',
+            marker: {
+                color: programsData.map(d => d.patterns > 30 ? '#e74c3c' : d.patterns > 20 ? '#f39c12' : '#3498db')
+            }
+        };
+        Plotly.newPlot('patternsEvolution', [patternsTrace], {
+            title: 'Patterns Suspects par Programme',
+            xaxis: { title: 'Programme', tickangle: -45 },
+            yaxis: { title: 'Nombre de Patterns' },
+            height: 400
+        }, config);
+
+        // Distribution des types de patterns
+        const patternsPie = {
+            values: [181, 54, 1],
+            labels: ['Cycles Courts', 'Bidirectionnels <1h', 'Ratios Élevés'],
+            type: 'pie',
+            marker: {
+                colors: ['#e74c3c', '#f39c12', '#9b59b6']
+            },
+            textinfo: 'label+percent+value'
+        };
+        Plotly.newPlot('patternsDistribution', [patternsPie], {
+            title: 'Répartition par Type de Pattern',
+            height: 400
+        }, config);
+
+        // Volume par programme
+        const volumeTrace = {
+            x: programsData.map(d => d.program),
+            y: programsData.map(d => d.volume),
+            type: 'bar',
+            name: 'Volume Suspect (M$)',
+            marker: {
+                color: programsData.map(d => d.volume > 200 ? '#e74c3c' : d.volume > 50 ? '#f39c12' : '#27ae60')
+            }
+        };
+        Plotly.newPlot('volumeByProgram', [volumeTrace], {
+            title: 'Volume Suspect par Programme',
+            xaxis: { title: 'Programme', tickangle: -45 },
+            yaxis: { title: 'Volume (Millions USD)' },
+            height: 400
+        }, config);
+
+        // Top adresses par volume
+        const topAddressesTrace = {
+            x: addressesData.map(d => d.volume),
+            y: addressesData.map(d => `${d.address.substring(0,10)}...`),
+            type: 'bar',
+            orientation: 'h',
+            marker: {
+                color: addressesData.map(d => 
+                    d.risk === 'TRÈS ÉLEVÉ' ? '#e74c3c' : 
+                    d.risk === 'ÉLEVÉ' ? '#f39c12' : '#27ae60'
+                )
+            }
+        };
+        Plotly.newPlot('topAddresses', [topAddressesTrace], {
+            title: 'Top 5 Adresses par Volume Suspect',
+            xaxis: { title: 'Volume (Millions USD)' },
+            yaxis: { title: 'Adresse' },
+            height: 300
+        }, config);
+
+        // DataTable pour les adresses
+        $(document).ready(function() {
+            const tableData = addressesData.map(addr => ({
+                rank: addr.rank,
+                address: addr.address,
+                patterns: addr.patterns,
+                volume: `${addr.volume}M`,
+                programs: addr.programs,
+                types: `<span class="pattern-badge badge-cycles">${Math.floor(addr.patterns * 0.77)}</span>
+                       <span class="pattern-badge badge-bidirectional">${Math.floor(addr.patterns * 0.23)}</span>`,
+                risk: addr.risk
+            }));
+
+            $('#addressesTable').DataTable({
+                data: tableData,
+                columns: [
+                    { data: 'rank' },
+                    { 
+                        data: 'address',
+                        render: function(data) {
+                            return `<code>${data.substring(0,20)}...</code>`;
+                        }
+                    },
+                    { data: 'patterns' },
+                    { data: 'volume' },
+                    { data: 'programs' },
+                    { data: 'types' },
+                    { 
+                        data: 'risk',
+                        render: function(data) {
+                            const badgeClass = data === 'TRÈS ÉLEVÉ' ? 'bg-danger' : 
+                                             data === 'ÉLEVÉ' ? 'bg-warning' : 'bg-success';
+                            return `<span class="badge ${badgeClass}">${data}</span>`;
+                        }
+                    }
+                ],
+                pageLength: 10,
+                order: [[2, 'desc']],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json'
+                },
+                createdRow: function(row, data) {
+                    if (data.risk === 'TRÈS ÉLEVÉ') {
+                        $(row).addClass('address-row-high');
+                    } else if (data.risk === 'ÉLEVÉ') {
+                        $(row).addClass('address-row-medium');
+                    } else {
+                        $(row).addClass('address-row-low');
+                    }
+                }
+            });
+        });
+
+        function exportToCSV() {
+            let csv = 'Rang,Adresse,Patterns,Volume,Programmes,Niveau Risque\n';
+            addressesData.forEach(addr => {
+                csv += `${addr.rank},"${addr.address}",${addr.patterns},"${addr.volume}M",${addr.programs},"${addr.risk}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'wash_trading_analysis.csv');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.querySelector('.fa-moon');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        // Navigation smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Animation des métriques au chargement
+        window.addEventListener('load', function() {
+            const metricValues = document.querySelectorAll('.metric-value');
+            metricValues.forEach(metric => {
+                metric.style.opacity = '0';
+                metric.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    metric.style.transition = 'all 0.6s ease';
+                    metric.style.opacity = '1';
+                    metric.style.transform = 'translateY(0)';
+                }, Math.random() * 500);
+            });
+        });
+    </script>
+</body>
+</html>
