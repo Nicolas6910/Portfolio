@@ -1,0 +1,2273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nicolas Chalopin - Quant Developer & Data Analyst</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #0080ff;
+            --danger: #ff0040;
+            --danger-light: #ff3366;
+            --dark: #0a0e1b;
+            --darker: #060914;
+            --light: #ffffff;
+            --text: #e0e0e0;
+            --text-dim: rgba(224, 224, 224, 0.7);
+            --success: #00ff88;
+            --warning: #ffaa00;
+            --card-bg: rgba(10, 14, 27, 0.9);
+            --gradient-1: linear-gradient(135deg, #00ff88 0%, #0080ff 100%);
+            --gradient-2: linear-gradient(135deg, #ff0040 0%, #ff3366 100%);
+            --gradient-3: linear-gradient(135deg, #00ff88 0%, #ff0040 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--darker);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .grid-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 20s infinite linear;
+        }
+
+        .particle:nth-child(odd) {
+            background: var(--primary);
+        }
+
+        .particle:nth-child(even) {
+            background: var(--danger);
+            animation-duration: 25s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(6, 9, 20, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-3);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 0 4rem;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .gradient-text {
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: var(--text-dim);
+        }
+
+        .hero-info {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dim);
+        }
+
+        .info-item i {
+            color: var(--primary);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-1);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--danger-light);
+            border: 2px solid var(--danger-light);
+        }
+
+        .btn-secondary:hover {
+            background: var(--danger);
+            color: var(--light);
+            border-color: var(--danger);
+        }
+
+        /* Advanced Trading Terminal */
+        .trading-terminal {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 0, 64, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(255, 0, 64, 0.1);
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .terminal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 5px rgba(0, 255, 136, 0); }
+            100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+
+        .terminal-content {
+            padding: 1.5rem;
+        }
+
+        .market-overview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .market-stat {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .market-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .market-stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .positive { color: var(--success); }
+        .negative { color: var(--danger); }
+
+        /* Charts Container */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-container {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-title {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .main-chart {
+            height: 200px;
+            position: relative;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .price-line {
+            stroke: var(--primary);
+            stroke-width: 2;
+            fill: none;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5));
+        }
+
+        .volume-bars {
+            fill: rgba(0, 128, 255, 0.3);
+        }
+
+        .indicators-container {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .indicator-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.75rem;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .indicator-name {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        .indicator-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        .rsi-chart {
+            height: 60px;
+            margin-top: 1rem;
+        }
+
+        .rsi-line {
+            stroke: var(--danger-light);
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .rsi-zones {
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-dasharray: 5,5;
+        }
+
+        /* Experience & Education Timeline */
+        .timeline-section {
+            padding: 5rem 0;
+            background: var(--dark);
+        }
+
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 3rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--gradient-3);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid var(--darker);
+        }
+
+        .timeline-date {
+            color: var(--danger-light);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-company {
+            color: var(--primary);
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .timeline-description {
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .timeline-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .skill-tag {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 5rem 0;
+            background: var(--darker);
+            position: relative;
+        }
+
+        .stats-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gradient-3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 0, 64, 0.2);
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-3);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--danger);
+            box-shadow: 0 15px 40px rgba(255, 0, 64, 0.15);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: var(--danger-light);
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Projects Section */
+        .projects-section {
+            padding: 5rem 0;
+            background: var(--dark);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 0, 64, 0.2);
+            border-radius: 12px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 0, 64, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--danger);
+            box-shadow: 0 20px 40px rgba(255, 0, 64, 0.2);
+        }
+
+        .project-card:hover::after {
+            opacity: 1;
+        }
+
+        .project-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-icon {
+            font-size: 2.5rem;
+            color: var(--danger-light);
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .project-description {
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .project-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-tag {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .project-link {
+            color: var(--danger-light);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .project-link:hover {
+            color: var(--primary);
+        }
+
+        /* Skills Section */
+        .skills-section {
+            padding: 5rem 0;
+            background: var(--darker);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .skill-category {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 0, 64, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            height: 100%;
+        }
+
+        .skill-category h3 {
+            font-size: 1.5rem;
+            color: var(--danger-light);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .skill-name {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .skill-level {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .skill-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 0, 64, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .skill-dot.active {
+            background: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 5rem 0;
+            background: var(--dark);
+        }
+
+        .contact-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .contact-item {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 0, 64, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--danger);
+            box-shadow: 0 15px 30px rgba(255, 0, 64, 0.15);
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            color: var(--danger-light);
+            margin-bottom: 1rem;
+        }
+
+        .contact-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .contact-item a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 0;
+            text-align: center;
+            background: var(--darker);
+            border-top: 1px solid rgba(255, 0, 64, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .timeline-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            .market-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--danger));
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--danger), var(--primary));
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="background-animation">
+        <div class="grid-background"></div>
+        <div class="floating-particles"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">NC</div>
+                <ul class="nav-links">
+                    <li><a href="#home">Accueil</a></li>
+                    <li><a href="#experience">Parcours</a></li>
+                    <li><a href="#projects">Projets</a></li>
+                    <li><a href="#skills">Compétences</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Nicolas <span class="gradient-text">Chalopin</span></h1>
+                    <h2>Quant Developer & Data Analyst</h2>
+                    <p>22 ans, passionné par la finance algorithmique, l'intelligence artificielle et la DeFi. Je développe des systèmes de trading automatisés haute performance et des modèles prédictifs basés sur le deep learning.</p>
+                    <h2>Mes ambitions</h2>
+
+                    <p>Allier IA, finance et développement pour concevoir des systèmes intelligents, performants et automatisés. Mon objectif : innover dans l’algo trading et la data science, en construisant des solutions à fort impact dans la fintech.</p>
+                    <div class="hero-info">
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Lyon, France</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Bac +3 IA & Data</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-briefcase"></i>
+                            <span>Recherche alternance Data Science</span>
+                        </div>
+                    </div>
+
+                    <div class="cta-buttons">
+                        <a href="#projects" class="btn btn-primary">
+                            <i class="fas fa-chart-line"></i> Explorer mes projets
+                        </a>
+                        <a href="mailto:nicolas01.chalopin@gmail.com" class="btn btn-secondary">
+                            <i class="fas fa-envelope"></i> Me contacter
+                        </a>
+                    </div>
+                </div>
+
+<!-- Advanced Trading Terminal -->
+<div class="trading-terminal">
+  <div class="terminal-header">
+    <h3 class="terminal-title">Live Trading Terminal</h3>
+    <div class="status-indicators">
+      <div class="status-dot"></div>
+      <span style="font-size: 0.875rem; color: var(--primary);">Connecting…</span>
+    </div>
+  </div>
+
+  <div class="terminal-content">
+    <div class="market-overview">
+      <div class="market-stat">
+        <div class="market-stat-label">Portfolio</div>
+        <div class="market-stat-value positive">€165,221</div>
+      </div>
+      <div class="market-stat">
+        <div class="market-stat-label">24h P&L</div>
+        <div class="market-stat-value positive">+4.86%</div>
+      </div>
+      <div class="market-stat">
+        <div class="market-stat-label">Win Rate</div>
+        <div class="market-stat-value">68.5%</div>
+      </div>
+      <div class="market-stat">
+        <div class="market-stat-label">Active Bots</div>
+        <div class="market-stat-value">7</div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-container">
+        <div class="chart-title">BTC/USDT - 1m Candles (<span id="lastPrice">…</span>)</div>
+        <div class="main-chart">
+          <svg id="candleChart" class="chart-svg" viewBox="0 0 400 200">
+            <!-- Candles will be rendered here -->
+          </svg>
+        </div>
+        
+        <!-- RSI Chart -->
+        <div class="rsi-chart">
+          <svg id="rsiChart" class="chart-svg" viewBox="0 0 400 60">
+            <!-- RSI zones -->
+            <line x1="0" y1="15" x2="400" y2="15" stroke="#ff3d00" stroke-width="0.5" opacity="0.5"/>
+            <line x1="0" y1="45" x2="400" y2="45" stroke="#ff3d00" stroke-width="0.5" opacity="0.5"/>
+            <text x="5" y="12" fill="#ff3d00" font-size="8">70</text>
+            <text x="5" y="50" fill="#ff3d00" font-size="8">30</text>
+            <!-- RSI line will be rendered here -->
+          </svg>
+          <div style="font-size: 0.75rem; color: var(--text-dim); text-align: center;">RSI(14): <span id="rsiValue">--</span></div>
+        </div>
+      </div>
+
+      <div class="indicators-container">
+        <div class="indicator-item">
+          <span class="indicator-name">Signal</span>
+          <span class="indicator-value" id="signalValue">--</span>
+        </div>
+        <div class="indicator-item">
+          <span class="indicator-name">High 24h</span>
+          <span class="indicator-value" id="high24Value">--</span>
+        </div>
+        <div class="indicator-item">
+          <span class="indicator-name">Low 24h</span>
+          <span class="indicator-value" id="low24Value">--</span>
+        </div>
+        <div class="indicator-item">
+          <span class="indicator-name">Change 24h</span>
+          <span class="indicator-value" id="change24Value">--</span>
+        </div>
+        <div class="indicator-item">
+          <span class="indicator-name">Trend</span>
+          <span class="indicator-value" id="trendValue">--</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const MAX_DISPLAY_CANDLES = 20;
+  const svgTop = 10, svgBottom = 190;
+  const chartW = 380, chartH = svgBottom - svgTop;
+  const xOffset = 10;
+  const candleWidth = chartW / MAX_DISPLAY_CANDLES * 0.6;
+  const candleSpacing = chartW / MAX_DISPLAY_CANDLES;
+
+  let candles = [];
+  let priceHistory = [];
+  let macdHistory = [];
+  let ws = null;
+  let isConnected = false;
+
+  const statusDot = document.querySelector('.status-dot');
+  const statusText = document.querySelector('.status-indicators span');
+  const priceLabel = document.getElementById('lastPrice');
+  const rsiValueLabel = document.getElementById('rsiValue');
+  const signalValueLabel = document.getElementById('signalValue');
+  const high24ValueLabel = document.getElementById('high24Value');
+  const low24ValueLabel = document.getElementById('low24Value');
+  const change24ValueLabel = document.getElementById('change24Value');
+  const trendValueLabel = document.getElementById('trendValue');
+  const candleSvg = document.getElementById('candleChart');
+  const rsiSvg = document.getElementById('rsiChart');
+
+  // Initialiser les données
+  async function initializeData() {
+    try {
+      statusText.textContent = 'Loading data...';
+      
+      // Récupérer l'historique des klines (100 dernières bougies)
+      const klinesResponse = await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=100');
+      const klinesData = await klinesResponse.json();
+      
+      // Récupérer les stats 24h
+      const tickerResponse = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+      const ticker24h = await tickerResponse.json();
+      
+      // Traiter les données klines
+      const processedCandles = klinesData.map(kline => ({
+        open: parseFloat(kline[1]),
+        high: parseFloat(kline[2]),
+        low: parseFloat(kline[3]),
+        close: parseFloat(kline[4]),
+        volume: parseFloat(kline[5]),
+        timestamp: kline[0],
+        closeTime: kline[6]
+      }));
+      
+      candles = processedCandles;
+      priceHistory = candles.map(c => c.close);
+      
+      // Mettre à jour les stats 24h
+      update24hStats(ticker24h);
+      
+      // Afficher les données initiales
+      updateDisplay();
+      drawCandles();
+      drawRSI();
+      
+      // Démarrer le WebSocket
+      connectWebSocket();
+      
+    } catch (error) {
+      console.error('Erreur lors du chargement des données:', error);
+      statusText.textContent = 'Error loading data';
+      statusDot.style.background = '#ff3d00';
+    }
+  }
+
+  function connectWebSocket() {
+    try {
+      ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@kline_1m');
+      
+      ws.onopen = () => {
+        isConnected = true;
+        statusDot.style.background = '#22c55e';
+        statusText.textContent = 'Connected to Binance';
+      };
+      
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.k) {
+          processKlineUpdate(data.k);
+        }
+      };
+      
+      ws.onclose = () => {
+        isConnected = false;
+        statusDot.style.background = '#ff3d00';
+        statusText.textContent = 'Disconnected';
+        // Tentative de reconnexion après 5 secondes
+        setTimeout(connectWebSocket, 5000);
+      };
+      
+      ws.onerror = (error) => {
+        console.error('Erreur WebSocket:', error);
+        statusDot.style.background = '#ff3d00';
+        statusText.textContent = 'Connection error';
+      };
+      
+    } catch (error) {
+      console.error('Erreur de connexion WebSocket:', error);
+    }
+  }
+
+  function processKlineUpdate(klineData) {
+    const newCandle = {
+      open: parseFloat(klineData.o),
+      high: parseFloat(klineData.h),
+      low: parseFloat(klineData.l),
+      close: parseFloat(klineData.c),
+      volume: parseFloat(klineData.v),
+      timestamp: klineData.t,
+      closeTime: klineData.T,
+      isClosed: klineData.x // true si la bougie est fermée
+    };
+
+    if (klineData.x) {
+      // Bougie fermée - ajouter une nouvelle bougie
+      candles.push(newCandle);
+      if (candles.length > 100) {
+        candles.shift();
+      }
+      
+      priceHistory.push(newCandle.close);
+      if (priceHistory.length > 100) {
+        priceHistory.shift();
+      }
+    } else {
+      // Mise à jour de la bougie actuelle
+      if (candles.length > 0) {
+        candles[candles.length - 1] = newCandle;
+        priceHistory[priceHistory.length - 1] = newCandle.close;
+      }
+    }
+
+    updateDisplay();
+    drawCandles();
+    drawRSI();
+  }
+
+  function update24hStats(ticker24h) {
+    high24ValueLabel.textContent = parseFloat(ticker24h.highPrice).toFixed(2);
+    low24ValueLabel.textContent = parseFloat(ticker24h.lowPrice).toFixed(2);
+    
+    const changePercent = parseFloat(ticker24h.priceChangePercent).toFixed(2);
+    change24ValueLabel.textContent = changePercent + '%';
+    change24ValueLabel.className = parseFloat(changePercent) >= 0 ? 'indicator-value positive' : 'indicator-value negative';
+  }
+
+  function updateDisplay() {
+    if (candles.length === 0) return;
+    
+    const lastCandle = candles[candles.length - 1];
+    priceLabel.textContent = lastCandle.close.toFixed(2);
+    
+    // Calculer les indicateurs
+    if (priceHistory.length >= 15) {
+      // RSI
+      const rsi = calculateRSI(priceHistory);
+      rsiValueLabel.textContent = rsi.toFixed(1);
+      
+      // MACD
+      const macdData = calculateMACD(priceHistory);
+      signalValueLabel.textContent = macdData.signal.toFixed(6);
+      
+      // Trend
+      if (priceHistory.length >= 20) {
+        const shortMA = priceHistory.slice(-5).reduce((a, b) => a + b, 0) / 5;
+        const longMA = priceHistory.slice(-20).reduce((a, b) => a + b, 0) / 20;
+        const isBullish = shortMA > longMA;
+        trendValueLabel.textContent = isBullish ? 'Bullish' : 'Bearish';
+        trendValueLabel.className = isBullish ? 'indicator-value positive' : 'indicator-value negative';
+      }
+    }
+  }
+
+  function calculateRSI(prices, period = 14) {
+    if (prices.length < period + 1) return 50;
+    
+    let gains = 0, losses = 0;
+    for (let i = prices.length - period; i < prices.length; i++) {
+      const change = prices[i] - prices[i - 1];
+      if (change > 0) gains += change;
+      else losses -= change;
+    }
+    
+    const avgGain = gains / period;
+    const avgLoss = losses / period;
+    const rs = avgGain / (avgLoss || 1);
+    return 100 - (100 / (1 + rs));
+  }
+
+  function calculateEMA(values, period) {
+    if (values.length === 0) return 0;
+    const k = 2 / (period + 1);
+    let ema = values[0];
+    for (let i = 1; i < values.length; i++) {
+      ema = values[i] * k + ema * (1 - k);
+    }
+    return ema;
+  }
+
+  function calculateMACD(prices) {
+    if (prices.length < 26) return { macd: 0, signal: 0, histogram: 0 };
+    
+    const ema12 = calculateEMA(prices.slice(-12), 12);
+    const ema26 = calculateEMA(prices.slice(-26), 26);
+    const macd = ema12 - ema26;
+    
+    macdHistory.push(macd);
+    if (macdHistory.length > 9) macdHistory.shift();
+    
+    const signal = calculateEMA(macdHistory.slice(), 9);
+    
+    return { macd, signal, histogram: macd - signal };
+  }
+
+  function calculateATR(candles, period = 14) {
+    if (candles.length < 2) return 0;
+    
+    let trSum = 0;
+    const start = Math.max(0, candles.length - period);
+    
+    for (let i = start + 1; i < candles.length; i++) {
+      const current = candles[i];
+      const previous = candles[i - 1];
+      
+      const tr = Math.max(
+        current.high - current.low,
+        Math.abs(current.high - previous.close),
+        Math.abs(current.low - previous.close)
+      );
+      trSum += tr;
+    }
+    
+    return trSum / Math.min(period, candles.length - 1);
+  }
+
+  function drawCandles() {
+    while (candleSvg.firstChild) candleSvg.removeChild(candleSvg.firstChild);
+    
+    // Afficher les 10 dernières bougies
+    const displayCandles = candles.slice(-MAX_DISPLAY_CANDLES);
+    if (!displayCandles.length) return;
+    
+    const prices = displayCandles.flatMap(c => [c.high, c.low]);
+    const minP = Math.min(...prices);
+    const maxP = Math.max(...prices);
+    const range = maxP - minP || 1;
+
+    displayCandles.forEach((c, i) => {
+      const x = xOffset + i * candleSpacing + (candleSpacing - candleWidth) / 2;
+      const yOpen = svgBottom - ((c.open - minP) / range) * chartH;
+      const yClose = svgBottom - ((c.close - minP) / range) * chartH;
+      const yHigh = svgBottom - ((c.high - minP) / range) * chartH;
+      const yLow = svgBottom - ((c.low - minP) / range) * chartH;
+      const isBull = c.close >= c.open;
+      const color = isBull ? '#00e676' : '#ff3d00';
+
+      // Wick
+      const wick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      wick.setAttribute('x1', x + candleWidth/2);
+      wick.setAttribute('x2', x + candleWidth/2);
+      wick.setAttribute('y1', yHigh);
+      wick.setAttribute('y2', yLow);
+      wick.setAttribute('stroke', color);
+      wick.setAttribute('stroke-width', '1');
+      candleSvg.appendChild(wick);
+      
+      // Body
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', x);
+      rect.setAttribute('y', Math.min(yOpen, yClose));
+      rect.setAttribute('width', candleWidth);
+      rect.setAttribute('height', Math.abs(yClose - yOpen) || 1);
+      rect.setAttribute('fill', color);
+      candleSvg.appendChild(rect);
+    });
+  }
+
+  function drawRSI() {
+    const existingLine = rsiSvg.querySelector('.rsi-line');
+    if (existingLine) existingLine.remove();
+    
+    if (priceHistory.length < 15) return;
+    
+    const rsiValues = [];
+    const startIndex = Math.max(14, priceHistory.length - MAX_DISPLAY_CANDLES);
+    
+    for (let i = startIndex; i < priceHistory.length; i++) {
+      const rsi = calculateRSI(priceHistory.slice(0, i + 1));
+      rsiValues.push(rsi);
+    }
+    
+    if (rsiValues.length < 2) return;
+    
+    const rsiPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    let pathData = '';
+    
+    rsiValues.forEach((rsi, i) => {
+      const x = xOffset + (i / (rsiValues.length - 1)) * (400 - 2 * xOffset);
+      const y = 60 - (rsi / 100) * 60;
+      pathData += (i === 0 ? 'M' : 'L') + x + ',' + y;
+    });
+    
+    rsiPath.setAttribute('d', pathData);
+    rsiPath.setAttribute('stroke', '#00e676');
+    rsiPath.setAttribute('stroke-width', '2');
+    rsiPath.setAttribute('fill', 'none');
+    rsiPath.setAttribute('class', 'rsi-line');
+    rsiSvg.appendChild(rsiPath);
+  }
+
+  // Démarrer l'application
+  initializeData();
+})();
+</script>
+</div>
+</section>
+
+    <!-- Experience & Education Timeline -->
+    <section class="timeline-section" id="experience">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title gradient-text">Mon Parcours</h2>
+                <p class="section-subtitle">Formation d'excellence et expérience en finance tech</p>
+            </div>
+
+            <div class="timeline-grid">
+                <!-- Experience -->
+                <div>
+                    <h3 style="font-size: 2rem; margin-bottom: 2rem; color: var(--primary);">Expérience Professionnelle</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Jan 2024 - Sep 2024</div>
+                            <div class="timeline-title">Assistant Chef de Projet Digital</div>
+                            <div class="timeline-company">Influence Society - Lyon</div>
+                            <div class="timeline-description">
+                                Agence spécialisée dans les solutions web & IA pour les acteurs du tourisme et de l'hôtellerie de luxe.
+                                <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                                    <li>Conception de sites Webflow avec modules d'IA intégrés</li>
+                                    <li>Automatisation du contenu et optimisation UX</li>
+                                    <li>Développement front-end et solutions responsive</li>
+                                </ul>
+                            </div>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Webflow</span>
+                                <span class="skill-tag">HTML/CSS</span>
+                                <span class="skill-tag">JavaScript</span>
+                                <span class="skill-tag">IA Integration</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education -->
+                <div>
+                    <h3 style="font-size: 2rem; margin-bottom: 2rem; color: var(--primary);">Formation</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Sep 2025 - En cours</div>
+                            <div class="timeline-title">Bachelor Intelligence Artificielle & Data</div>
+                            <div class="timeline-company">Ynov Campus - Lyon</div>
+                            <div class="timeline-description">
+                                Formation spécialisée en data science et intelligence artificielle. Apprentissage supervisé/non supervisé, 
+                                deep learning avec TensorFlow, manipulation de bases SQL/NoSQL.
+                            </div>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Machine Learning</span>
+                                <span class="skill-tag">Deep Learning</span>
+                                <span class="skill-tag">SQL/NoSQL</span>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">Sep 2023 - Juin 2024</div>
+                            <div class="timeline-title">Bachelor UX Design</div>
+                            <div class="timeline-company">Digital Campus - Lyon</div>
+                            <div class="timeline-description">
+                                Formation orientée développement web et UX. Création de prototypes interactifs, 
+                                intégration HTML/CSS, JavaScript et automatisation front-end.
+                            </div>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">UX Design</span>
+                                <span class="skill-tag">Prototyping</span>
+                                <span class="skill-tag">Front-end</span>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">Sep 2020 - Juin 2022</div>
+                            <div class="timeline-title">Cycle Préparatoire Ingénieur</div>
+                            <div class="timeline-company">EPF École d'Ingénieur - Montpellier</div>
+                            <div class="timeline-description">
+                                Formation scientifique en mathématiques, physique et informatique. 
+                                Projets en Python, C++, SQL, développement web et gestion agile.
+                            </div>
+                            <div class="timeline-skills">
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">C++</span>
+                                <span class="skill-tag">SQL</span>
+                                <span class="skill-tag">Agile</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-chart-line stat-icon"></i>
+                    <div class="stat-number">66.46%</div>
+                    <div class="stat-label">Rendement Maximum</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-robot stat-icon"></i>
+                    <div class="stat-number">21+</div>
+                    <div class="stat-label">Stratégies Développées</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-trophy stat-icon"></i>
+                    <div class="stat-number">2.68</div>
+                    <div class="stat-label">Profit Factor</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock stat-icon"></i>
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Trading Automatisé</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects-section" id="projects">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title gradient-text">Projets Innovants</h2>
+                <p class="section-subtitle">Systèmes de trading haute performance et modèles prédictifs avancés</p>
+            </div>
+
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <i class="fas fa-rocket project-icon"></i>
+                        <h3 class="project-title">Bot Trading HFT</h3>
+                    </div>
+                    <p class="project-description">
+                        Système de trading haute fréquence capable d'exécuter des milliers d'ordres par jour. 
+                        Intégration complète avec l'API REST MEXC, gestion avancée des risques avec trailing stop 
+                        et système de logging détaillé pour l'analyse post-trade.
+                    </p>
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <div class="metric-value">1000+</div>
+                            <div class="metric-label">Trades/jour</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">50ms</div>
+                            <div class="metric-label">Latence</div>
+                        </div>
+                    </div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">API REST</span>
+                        <span class="tech-tag">Threading</span>
+                        <span class="tech-tag">HMAC</span>
+                        <span class="tech-tag">Selenium</span>
+                    </div>
+                    <div class="project-links">
+                        </a>
+                        <a href="https://github.com/Nicolas6910/portfolio-algo-trading/blob/main/Bot%20Trading%20HFT/Bot%20Trading%20HFT.py" class="project-link">
+                            <i class="fab fa-github"></i> Code source
+                        </a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <i class="fas fa-brain project-icon"></i>
+                        <h3 class="project-title">LSTM TensorFlow</h3>
+                    </div>
+                    <p class="project-description">
+                        Réseau de neurones LSTM pour la prédiction de prix crypto. Entraîné sur des séquences 
+                        temporelles enrichies de 40+ indicateurs techniques. Architecture optimisée avec dropout 
+                        et early stopping pour éviter l'overfitting.
+                    </p>
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <div class="metric-value">48.02%</div>
+                            <div class="metric-label">Précision</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">201.99</div>
+                            <div class="metric-label">MAE</div>
+                        </div>
+                    </div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">TensorFlow</span>
+                        <span class="tech-tag">Keras</span>
+                        <span class="tech-tag">TA-Lib</span>
+                        <span class="tech-tag">NumPy</span>
+                        <span class="tech-tag">Scikit-learn</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="file:///C:/Users/nicol/Desktop/Mes%20Projets/Portfolio/LSTM%20TensorFlow.html" class="project-link" target="_blank">
+                            <i class="fas fa-chart-area"></i> Rapport
+                        </a>
+                        <a href="https://github.com/Nicolas6910/portfolio-algo-trading/blob/main/LSTM%20TensorFlow/LSTM%20TensorFlow.py" class="project-link">
+                            <i class="fab fa-github"></i> Code source
+                        </a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <i class="fas fa-chart-bar project-icon"></i>
+                        <h3 class="project-title">M-Making Analytics</h3>
+                    </div>
+                    <p class="project-description">
+                        Dashboard temps réel pour l'analyse de carnets d'ordres. Détection automatique de 
+                        wash-trading et volumes anormaux via algorithmes de clustering. Interface interactive 
+                        avec filtres avancés et alertes personnalisables.
+                    </p>
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <div class="metric-value">$667.6M</div>
+                            <div class="metric-label">Volume suspect</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">236</div>
+                            <div class="metric-label">Transactions suspectes</div>
+                        </div>
+                    </div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Dash</span>
+                        <span class="tech-tag">Plotly</span>
+                        <span class="tech-tag">WebSocket</span>
+                        <span class="tech-tag">NetworkX</span>
+                        <span class="tech-tag">Pandas</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="file:///C:/Users/nicol/Desktop/Mes%20Projets/Portfolio/M-Making%20Analytics.html" class="project-link" target="_blank">
+                            <i class="fas fa-chart-area"></i> Rapport
+                        </a>
+                        <a href="https://github.com/Nicolas6910/portfolio-algo-trading/blob/main/M-Making%20Analytics/M-Making%20Analytics.ipynb" class="project-link">
+                            <i class="fab fa-github"></i> Code source
+                        </a>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <i class="fas fa-search-dollar project-icon"></i>
+                        <h3 class="project-title">Détection Signaux PEPE</h3>
+                    </div>
+                    <p class="project-description">
+                    Stratégie algorithmique de détection de signaux d'entrée/sortie sur la paire PEPE/USDT. Utilisation d'indicateurs techniques avancés et d'analyse de momentum pour identifier les opportunités de trading avec un ratio risque/récompense optimisé.
+                    </p>
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <div class="metric-value">66.46%</div>
+                            <div class="metric-label">Profit</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">14.47%</div>
+                            <div class="metric-label">Max Drawdown</div>
+                        </div>
+                    </div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">TA-Lib</span>
+                        <span class="tech-tag">Backtesting</span>
+                        <span class="tech-tag">Signal Processing</span>
+                        <span class="tech-tag">Risk Management</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="file:///C:/Users/nicol/Desktop/Mes%20Projets/Portfolio/D%C3%A9tection%20Signaux%20PEPE.html" class="project-link" target="_blank">
+                            <i class="fas fa-chart-area"></i> Rapport
+                        </a>
+                        <a href="https://github.com/Nicolas6910/portfolio-algo-trading/blob/main/D%C3%A9tection%20Signaux%20PEPE/D%C3%A9tection%20Signaux%20PEPE.py" class="project-link">
+                            <i class="fab fa-github"></i> Code source
+                        </a>
+                    </div>
+                </div>
+                
+                
+                
+                <div class="project-card">
+                    <div class="project-header">
+                        <i class="fas fa-search-dollar project-icon"></i>
+                        <h3 class="project-title">Stratégie MACD Bitcoin</h3>
+                    </div>
+                    <p class="project-description">
+                    Implémentation d'une stratégie MACD optimisée pour le trading de Bitcoin. Analyse des divergences, croisements de lignes et histogramme pour générer des signaux précis. Backtesting exhaustif sur plusieurs années de données historiques.
+                    </p>
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <div class="metric-value">199.78%</div>
+                            <div class="metric-label">Profit</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">33.9%</div>
+                            <div class="metric-label">Winrate</div>
+                        </div>
+                    </div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">MACD</span>
+                        <span class="tech-tag">Technical Analysis</span>
+                        <span class="tech-tag">Pandas</span>
+                        <span class="tech-tag">Matplotlib</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="file:///C:/Users/nicol/Desktop/Mes%20Projets/Portfolio/Strat%C3%A9gie%20MACD%20Bitcoin.html" class="project-link" target="_blank">
+                            <i class="fas fa-chart-area"></i> Rapport
+                        </a>
+                        <a href="https://github.com/Nicolas6910/portfolio-algo-trading/blob/main/Strat%C3%A9gie%20MACD%20Bitcoin/Strat%C3%A9gie%20MACD%20Bitcoin.py" class="project-link">
+                            <i class="fab fa-github"></i> Code source
+                        </a>
+                    </div>
+                </div>
+                
+                
+                
+                
+                
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="skills-section" id="skills">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title gradient-text">Compétences Techniques</h2>
+                <p class="section-subtitle">Stack technologique complet pour la finance quantitative</p>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3><i class="fas fa-code"></i> Programmation</h3>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span class="skill-name">Python</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">SQL</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">C++</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">JavaScript</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">HTML/CSS</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3><i class="fas fa-robot"></i> Machine Learning</h3>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span class="skill-name">TensorFlow/Keras</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Scikit-learn</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Pandas/NumPy</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">LSTM/RNN</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Clustering</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3><i class="fas fa-chart-line"></i> Trading & Finance</h3>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span class="skill-name">TA-Lib/Pandas-ta</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Backtesting</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Risk Management</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">DeFi/Crypto</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">API Trading</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3><i class="fas fa-tools"></i> DevOps & Outils</h3>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span class="skill-name">Git/GitHub</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Jupyter</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">SQLite</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Selenium</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Dash/Plotly</span>
+                            <div class="skill-level">
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot active"></span>
+                                <span class="skill-dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="contact-content">
+                <div class="section-header">
+                    <h2 class="section-title gradient-text">Collaborons Ensemble</h2>
+                    <p class="section-subtitle">Recherche alternance Data Science/Engineering • Disponible 01/07/2025</p>
+                </div>
+
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope contact-icon"></i>
+                        <h4>Email</h4>
+                        <a href="mailto:nicolas01.chalopin@gmail.com">Mon mail</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone contact-icon"></i>
+                        <h4>Téléphone</h4>
+                        <a href="tel:+33782425124">07 82 42 51 24</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-linkedin contact-icon"></i>
+                        <h4>LinkedIn</h4>
+                        <a href="https://linkedin.com/in/nicolas-chalopin" target="_blank">Mon profil</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-github contact-icon"></i>
+                        <h4>GitHub</h4>
+                        <a href="https://github.com/nicolaschalopin" target="_blank">Mes projets</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Nicolas Chalopin. Tous droits réservés. | Passionné de Finance & IA</p>
+        </div>
+    </footer>
+
+    <script>
+        // Particle Animation
+        function createParticles() {
+            const container = document.querySelector('.floating-particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = 20 + Math.random() * 10 + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Live Trading Data Animation
+        function animateMarketData() {
+            const updateValue = (element, baseValue, isPercent = false) => {
+                const variance = (Math.random() - 0.5) * 0.5;
+                const newValue = baseValue + variance;
+                const formatted = isPercent ? 
+                    (newValue > 0 ? '+' : '') + newValue.toFixed(2) + '%' : 
+                    '€' + (baseValue + Math.random() * 1000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                
+                element.textContent = formatted;
+                element.className = 'market-stat-value ' + (newValue > 0 ? 'positive' : 'negative');
+            };
+
+            setInterval(() => {
+                // Update portfolio value
+                const portfolio = document.querySelector('.market-stat-value');
+                if (portfolio && portfolio.textContent.includes('€')) {
+                    const baseValue = 166461;
+                    portfolio.textContent = '€' + (baseValue + Math.random() * 5000 - 2500).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                }
+
+                // Update P&L
+                const pnl = document.querySelectorAll('.market-stat-value')[1];
+                if (pnl) {
+                    updateValue(pnl, 4.82, true);
+                }
+
+                // Update indicators
+                document.querySelectorAll('.indicator-value').forEach((indicator, index) => {
+                    if (index === 0) { // MACD
+                        const value = (Math.random() * 0.005).toFixed(5);
+                        indicator.textContent = value;
+                        indicator.className = 'indicator-value ' + (value > 0.002 ? 'positive' : '');
+                    }
+                });
+            }, 3000);
+        }
+
+        // Animate Chart Lines
+        function animateCharts() {
+            const priceLine = document.querySelector('.price-line');
+            const rsiLine = document.querySelector('.rsi-line');
+            
+            if (priceLine) {
+                setInterval(() => {
+                    let path = 'M10,';
+                    const points = [];
+                    for (let i = 0; i < 14; i++) {
+                        const y = 60 + Math.random() * 80;
+                        points.push(y);
+                    }
+                    
+                    // Smooth the line
+                    for (let i = 0; i < points.length; i++) {
+                        if (i > 0 && i < points.length - 1) {
+                            points[i] = (points[i-1] + points[i] + points[i+1]) / 3;
+                        }
+                        path += (i === 0 ? '' : ' L' + (10 + i * 30) + ',') + points[i];
+                    }
+                    
+                    priceLine.setAttribute('d', path);
+                }, 2000);
+            }
+
+            if (rsiLine) {
+                setInterval(() => {
+                    let path = 'M10,';
+                    for (let i = 0; i < 14; i++) {
+                        const y = 30 + (Math.sin(i * 0.5) * 15) + (Math.random() * 10 - 5);
+                        path += (i === 0 ? '' : ' L' + (10 + i * 30) + ',') + y;
+                    }
+                    rsiLine.setAttribute('d', path);
+                    
+                    // Update RSI value
+                    const rsiValue = 50 + Math.random() * 20 - 10;
+                    const rsiText = document.querySelector('.rsi-chart + div');
+                    if (rsiText) {
+                        rsiText.innerHTML = `RSI(14): ${rsiValue.toFixed(1)}`;
+                    }
+                }, 2500);
+            }
+        }
+
+        // Typing Effect
+        function typeWriter() {
+            const text = "Quant Developer & Data Analyst";
+            const h2 = document.querySelector('.hero-text h2');
+            let i = 0;
+            
+            if (h2) {
+                h2.textContent = '';
+                
+                function type() {
+                    if (i < text.length) {
+                        h2.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, 50);
+                    }
+                }
+                
+                type();
+            }
+        }
+
+        // Number Counter Animation
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stat-number');
+            
+            numbers.forEach(number => {
+                const target = number.textContent;
+                const isPercent = target.includes('%');
+                const isPlus = target.includes('+');
+                const numericValue = parseFloat(target.replace(/[^0-9.-]/g, ''));
+                
+                let current = 0;
+                const increment = numericValue / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= numericValue) {
+                        current = numericValue;
+                        clearInterval(timer);
+                    }
+                    
+                    if (isPercent) {
+                        number.textContent = current.toFixed(2) + '%';
+                    } else if (isPlus) {
+                        number.textContent = current.toFixed(0) + '+';
+                    } else if (target.includes('.')) {
+                        number.textContent = current.toFixed(2);
+                    } else if (target.includes('/')) {
+                        number.textContent = '24/7';
+                    } else {
+                        number.textContent = current.toFixed(0);
+                    }
+                }, 30);
+            });
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    
+                    // Trigger number animation for stats
+                    if (entry.target.classList.contains('stats-section')) {
+                        animateNumbers();
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Apply fade-in animation to sections
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'all 0.8s ease-out';
+                observer.observe(section);
+            });
+
+            // Initialize animations
+            createParticles();
+            animateMarketData();
+            animateCharts();
+            setTimeout(typeWriter, 500);
+
+            // Mobile menu toggle (if needed)
+            const navLinks = document.querySelector('.nav-links');
+            if (window.innerWidth <= 768) {
+                const menuBtn = document.createElement('button');
+                menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                menuBtn.style.cssText = 'background: none; border: none; color: var(--primary); font-size: 1.5rem; cursor: pointer;';
+                
+                document.querySelector('.nav-container').appendChild(menuBtn);
+                
+                menuBtn.addEventListener('click', () => {
+                    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                    navLinks.style.position = 'absolute';
+                    navLinks.style.top = '100%';
+                    navLinks.style.left = '0';
+                    navLinks.style.right = '0';
+                    navLinks.style.background = 'var(--darker)';
+                    navLinks.style.flexDirection = 'column';
+                    navLinks.style.padding = '1rem';
+                });
+            }
+
+            // Dynamic year in footer
+            const year = new Date().getFullYear();
+            document.querySelector('footer p').innerHTML = `&copy; ${year} Nicolas Chalopin. Tous droits réservés. | Passionné de Finance & IA`;
+        });
+
+        // Add glow effect on mouse move for cards
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.project-card, .stat-card, .skill-category, .contact-item');
+            
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const percentX = (x - centerX) / centerX;
+                    const percentY = (y - centerY) / centerY;
+                    
+                    card.style.transform = `translateY(-5px) rotateY(${percentX * 5}deg) rotateX(${-percentY * 5}deg)`;
+                    card.style.transition = 'transform 0.1s ease';
+                } else {
+                    card.style.transform = 'translateY(0) rotateY(0) rotateX(0)';
+                    card.style.transition = 'transform 0.3s ease';
+                }
+            });
+        });
+
+        // Loading animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>
