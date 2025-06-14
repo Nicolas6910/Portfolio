@@ -544,7 +544,7 @@
                     <div class="tradingview-widget-container__widget"></div>
                     <div class="tradingview-widget-copyright">
                         <a href="https://fr.tradingview.com/" rel="noopener nofollow" target="_blank">
-                            <span class="blue-text">*Graph décoratif</span>
+                            <span class="blue-text"></span>
                         </a>
                     </div>
                     <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
@@ -559,8 +559,6 @@
                         "backgroundColor": "rgba(0, 0, 0, 1)",
                         "gridColor": "rgba(152, 152, 152, 0.06)",
                         "allow_symbol_change": true,
-                        "details": true,
-                        "hotlist": true,
                         "studies": [
                             "STD;Bollinger_Bands",
                             "STD;RSI"
@@ -568,24 +566,6 @@
                         "support_host": "https://www.tradingview.com"
                     }
                     </script>
-                </div>
-                <!-- TradingView Widget END -->
-                
-                <div class="widget-footer">
-                    <div class="trading-metrics">
-                        <div class="metric-item">
-                            <i class="fas fa-bolt"></i>
-                            <span>Latence: 50ms</span>
-                        </div>
-                        <div class="metric-item">
-                            <i class="fas fa-robot"></i>
-                            <span>Bot actif</span>
-                        </div>
-                        <div class="metric-item">
-                            <i class="fas fa-shield-alt"></i>
-                            <span>Risk: Modéré</span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1619,12 +1599,10 @@ document.addEventListener('mousemove', function(e) {
                 </p>
                 <div class="project-metrics">
                     <div class="metric">
-                        <div class="metric-icon">📊</div>
                         <div class="metric-value" data-target="1000">0</div>
                         <div class="metric-label">Trades/jour</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-icon">⚡</div>
                         <div class="metric-value">50ms</div>
                         <div class="metric-label">Latence</div>
                     </div>
@@ -1658,12 +1636,10 @@ document.addEventListener('mousemove', function(e) {
                 </p>
                 <div class="project-metrics">
                     <div class="metric">
-                        <div class="metric-icon">🎯</div>
                         <div class="metric-value" data-target="48.02">0</div>
                         <div class="metric-label">Précision (%)</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-icon">📈</div>
                         <div class="metric-value" data-target="201.99">0</div>
                         <div class="metric-label">MAE</div>
                     </div>
@@ -1700,12 +1676,10 @@ document.addEventListener('mousemove', function(e) {
                 </p>
                 <div class="project-metrics">
                     <div class="metric">
-                        <div class="metric-icon">💰</div>
                         <div class="metric-value">$667.6M</div>
                         <div class="metric-label">Volume suspect</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-icon">🔍</div>
                         <div class="metric-value" data-target="236">0</div>
                         <div class="metric-label">Transactions</div>
                     </div>
@@ -1740,12 +1714,10 @@ document.addEventListener('mousemove', function(e) {
                 </p>
                 <div class="project-metrics">
                     <div class="metric">
-                        <div class="metric-icon">💎</div>
                         <div class="metric-value" data-target="66.46">0</div>
                         <div class="metric-label">Profit (%)</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-icon">📉</div>
                         <div class="metric-value" data-target="14.47">0</div>
                         <div class="metric-label">Max Drawdown (%)</div>
                     </div>
@@ -1755,7 +1727,6 @@ document.addEventListener('mousemove', function(e) {
                     <span class="tech-tag hover-tech">TA-Lib</span>
                     <span class="tech-tag hover-tech">Backtesting</span>
                     <span class="tech-tag hover-tech">Signal Processing</span>
-                    <span class="tech-tag hover-tech">Risk Management</span>
                 </div>
                 <div class="project-links">
                     <a href="https://nicolas6910.github.io/Portfolio/D%C3%A9tection%20Signaux%20PEPE.html" class="project-link" target="_blank">
@@ -1783,12 +1754,10 @@ document.addEventListener('mousemove', function(e) {
                 </p>
                 <div class="project-metrics">
                     <div class="metric">
-                        <div class="metric-icon">🚀</div>
                         <div class="metric-value" data-target="199.78">0</div>
                         <div class="metric-label">Profit (%)</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-icon">🎯</div>
                         <div class="metric-value" data-target="33.9">0</div>
                         <div class="metric-label">Winrate (%)</div>
                     </div>
@@ -1941,11 +1910,6 @@ document.addEventListener('mousemove', function(e) {
     transform: translateY(-3px);
 }
 
-.metric-icon {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    display: block;
-}
 
 .metric-value {
     font-size: 1.4rem;
@@ -3358,7 +3322,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
 // Final assembly script - Portfolio Nicolas Chalopin
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Portfolio Nicolas Chalopin - Initialisation...');
+    console.log('Portfolio Nicolas Chalopin - Initialisation...');
     
     // 1. Injecter le terminal de trading dans le container
     injectTradingTerminal();
@@ -3605,7 +3569,7 @@ function showLoadingComplete() {
     ✅ Effets de particules
     ✅ Design responsive
     
-    🚀 Prêt pour l'exploration!
+    Prêt pour l'exploration!
     `);
 }
 
