@@ -2497,45 +2497,35 @@ document.head.appendChild(style);
             </div>
 
             <div class="contact-grid">
-                <div class="contact-item" data-contact="email">
+                <a href="mailto:nicolas01.chalopin@gmail.com" class="contact-item clickable-card" data-contact="email">
                     <div class="contact-icon-wrapper">
                         <i class="fas fa-envelope contact-icon"></i>
                         <div class="icon-pulse"></div>
                     </div>
                     <h4>Email</h4>
-                    <a href="mailto:nicolas01.chalopin@gmail.com">nicolas01.chalopin@gmail.com</a>
+                    <span class="contact-info">nicolas01.chalopin@gmail.com</span>
                     <div class="contact-decoration"></div>
-                </div>
+                </a>
                 
-                <div class="contact-item" data-contact="phone">
+                <a href="tel:+33782425124" class="contact-item clickable-card" data-contact="phone">
                     <div class="contact-icon-wrapper">
                         <i class="fas fa-phone contact-icon"></i>
                         <div class="icon-pulse"></div>
                     </div>
                     <h4>Téléphone</h4>
-                    <a href="tel:+33782425124">07 82 42 51 24</a>
+                    <span class="contact-info">07 82 42 51 24</span>
                     <div class="contact-decoration"></div>
-                </div>
+                </a>
                 
-                <div class="contact-item" data-contact="linkedin">
+                <a href="https://www.linkedin.com/in/nicolas-chalopin-3a5072250/" target="_blank" class="contact-item clickable-card" data-contact="linkedin">
                     <div class="contact-icon-wrapper">
                         <i class="fab fa-linkedin contact-icon"></i>
                         <div class="icon-pulse"></div>
                     </div>
                     <h4>LinkedIn</h4>
-                    <a href="https://www.linkedin.com/in/nicolas-chalopin-3a5072250/" target="_blank">nicolas-chalopin</a>
+                    <span class="contact-info">nicolas-chalopin</span>
                     <div class="contact-decoration"></div>
-                </div>
-                
-                <div class="contact-item" data-contact="github">
-                    <div class="contact-icon-wrapper">
-                        <i class="fab fa-github contact-icon"></i>
-                        <div class="icon-pulse"></div>
-                    </div>
-                    <h4>GitHub</h4>
-                    <a href="https://github.com/Nicolas6910" target="_blank">nicolaschalopin</a>
-                    <div class="contact-decoration"></div>
-                </div>
+                </a>
             </div>
 
             <div class="contact-cta">
@@ -2548,6 +2538,314 @@ document.head.appendChild(style);
         </div>
     </div>
 </section>
+
+<style>
+/* Contact Section Enhanced - Clickable Cards */
+.contact-section {
+    padding: 5rem 0;
+    background: var(--dark);
+}
+
+.contact-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin: 4rem 0;
+}
+
+/* Clickable Contact Cards */
+.contact-item.clickable-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 0, 64, 0.2);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    text-align: center;
+    transform-style: preserve-3d;
+}
+
+.contact-item.clickable-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.contact-item.clickable-card:hover {
+    transform: translateY(-15px) scale(1.05);
+    border-color: var(--primary);
+    box-shadow: 0 25px 60px rgba(0, 255, 136, 0.3);
+    text-decoration: none;
+    color: inherit;
+}
+
+.contact-item.clickable-card:hover::before {
+    opacity: 1;
+}
+
+/* Click Effect */
+.contact-item.clickable-card:active {
+    transform: translateY(-10px) scale(1.02);
+    transition: all 0.1s ease;
+}
+
+.contact-icon-wrapper {
+    position: relative;
+    margin: 0 auto 1.5rem;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-icon {
+    font-size: 2rem;
+    color: var(--primary);
+    transition: all 0.3s ease;
+    z-index: 2;
+    position: relative;
+}
+
+.icon-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse-ring {
+    0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+.contact-item.clickable-card:hover .contact-icon {
+    transform: scale(1.2) rotate(10deg);
+    color: var(--danger);
+}
+
+.contact-item h4 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.contact-info {
+    color: var(--text-dim);
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.contact-item.clickable-card:hover .contact-info {
+    color: var(--primary);
+}
+
+.contact-decoration {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--danger));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.contact-item.clickable-card:hover .contact-decoration {
+    transform: scaleX(1);
+}
+
+/* CTA Section */
+.contact-cta {
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.cta-text {
+    font-size: 1.3rem;
+    color: var(--text);
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 3rem;
+    background: linear-gradient(135deg, var(--primary), var(--danger));
+    color: var(--light);
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 255, 136, 0.4);
+    text-decoration: none;
+    color: var(--light);
+}
+
+/* Ripple Effect for Click Feedback */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(0, 255, 136, 0.4);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+/* Enhanced Hover States */
+.contact-item.clickable-card:hover h4 {
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.contact-item.clickable-card:hover .icon-pulse {
+    border-color: var(--danger);
+    animation-duration: 1s;
+}
+
+/* Focus States for Accessibility */
+.contact-item.clickable-card:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
+    border-color: var(--primary);
+}
+
+.cta-button:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .contact-item.clickable-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .cta-button {
+        padding: 1.2rem 2rem;
+        font-size: 1rem;
+    }
+}
+</style>
+
+<script>
+// Enhanced Contact Section Interactions
+document.addEventListener('DOMContentLoaded', function() {
+    initContactInteractions();
+});
+
+function initContactInteractions() {
+    const contactCards = document.querySelectorAll('.contact-item.clickable-card');
+    
+    // Add ripple effect on click
+    contactCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            createRippleEffect(e, this);
+        });
+        
+        // Add keyboard navigation
+        card.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                createRippleEffect(e, this);
+                // Trigger click after short delay
+                setTimeout(() => {
+                    this.click();
+                }, 150);
+            }
+        });
+        
+        // Enhanced hover effects
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-15px) scale(1.05) perspective(1000px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1) perspective(1000px)';
+        });
+    });
+    
+    console.log('✅ Contact cards fully clickable');
+}
+
+function createRippleEffect(e, element) {
+    const ripple = document.createElement('span');
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+    
+    ripple.classList.add('ripple');
+    ripple.style.cssText = `
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}px;
+        top: ${y}px;
+    `;
+    
+    element.appendChild(ripple);
+    
+    // Remove ripple after animation
+    setTimeout(() => {
+        ripple.remove();
+    }, 600);
+}
+
+// Add touch feedback for mobile
+document.addEventListener('touchstart', function() {}, {passive: true});
+</script>
 
 <!-- Footer -->
 <footer class="footer">
